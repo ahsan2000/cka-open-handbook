@@ -1,6 +1,6 @@
 # CKA Open Handbook
 
-By Ahsan Nawaz. Original educational material: CC BY 4.0. Research checked October 30, 2026.
+By [Ahsan Nawaz](https://ahsan2000.github.io/portfolio). Original educational material: CC BY 4.0. Research checked October 30, 2026.
 
 Independent preparation; no passing guarantee. Use disposable labs. Official exam fee is separate. See the live Linux Foundation FAQ and candidate handbook before booking.
 

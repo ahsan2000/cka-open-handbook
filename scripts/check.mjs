@@ -16,8 +16,15 @@ run("location.hash='#commands';render()");el('#command-search').value='rollout';
 el('#command-search').value='no-such-command-xyz';run('renderCommands()');assert.ok(el('#command-list').innerHTML.includes('No commands match'));
 run("completed=['terminal','lab-setup'];updateProgress()");assert.equal(el('#progress').value,6);
 run("selectedMock='A';checklist={'mock-A-0':true,'mock-A-1':true};updateScore()");assert.equal(el('#mock-score').textContent,'18 / 100');
+assert.equal(run("JSON.stringify(validCompleted(['terminal','terminal','not-a-lesson']))"),'["terminal"]');
+assert.equal(run('JSON.stringify(validChecklist(42))'),'{}');
+assert.equal(run("JSON.stringify(validChecklist({'mock-A-0':true,'exam-0':'yes'}))"),'{"mock-A-0":true}');
 assert.equal(run('formatTime(7200)'),'02:00:00');assert.equal(run('formatTime(0)'),'00:00:00');
 run("search('etcd')");assert.ok(el('#search-results').innerHTML.includes('#troubleshooting/etcd'));
 const lessons=JSON.parse(run('JSON.stringify(lessons)'));for(const l of lessons){assert.ok(l.concept.length>100,l.id);assert.ok(l.steps.length>=3,l.id);assert.ok(l.command.length>50,l.id);assert.match(l.doc,/^https:\/\//);if(l.video)assert.ok(run(`Boolean(videos[${JSON.stringify(l.video)}])`));}
-for(const path of ['dist/index.html','dist/style.css','dist/mark.svg','dist/handbook.html','dist/labs.zip'])assert.ok(fs.statSync(path).size>0);
+for(const path of ['dist/index.html','dist/style.css','dist/mark.svg','dist/handbook.html','dist/labs.zip','dist/.nojekyll'])assert.ok(fs.existsSync(path));
 console.log('PASS: 14 page render functions, 34 complete modules, unique IDs, 100% domain weights, mock totals and scoring, progress calculation, command filters, search results and timer formatting. Browser layout/playback and Kubernetes execution remain unverified.');
+
+const index=fs.readFileSync('dist/index.html','utf8');assert.ok(index.includes('https://ahsan2000.github.io/portfolio'));assert.ok(!index.includes('git.chatgpt-team.site'));const canonical=index.match(/<link rel="canonical" href="([^"]+)">/)[1];assert.ok(canonical==='./'||/^https?:\/\//.test(canonical));if(process.env.SITE_URL)assert.equal(canonical,process.env.SITE_URL.replace(/\/?$/, '/'));
+const base=new URL('https://ahsan2000.github.io/cka-open-handbook/');for(const m of index.matchAll(/(?:src|href)="([^"]+)"/g)){const href=m[1];if(href.startsWith('#')||/^(https?:|data:)/.test(href))continue;const url=new URL(href,base);assert.ok(url.pathname.startsWith('/cka-open-handbook/'));assert.ok(fs.existsSync('dist/'+href.replace(/^\.\//,'')),href);}
+console.log('PASS: GitHub Pages subdirectory asset paths, author link and corrupt/duplicate progress recovery.');

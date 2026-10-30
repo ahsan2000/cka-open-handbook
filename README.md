@@ -1,6 +1,6 @@
 # CKA Open Handbook
 
-An original, free static CKA preparation website by Ahsan Nawaz.
+An original, free static CKA preparation website by [Ahsan Nawaz](https://ahsan2000.github.io/portfolio).
 
 - 34 modules across prerequisites and all five official exam domains
 - Concepts, guided exercises, commands, verification criteria and pitfalls
@@ -8,6 +8,10 @@ An original, free static CKA preparation website by Ahsan Nawaz.
 - Browser-local progress, export/import, search, filters and light/dark appearance
 - Six-week study plan and two original weighted, timed mock exams
 - Printable HTML, Markdown handbook and downloadable YAML practice pack
+
+## Publish on GitHub Pages
+
+Ready to host on GitHub Pages. Follow [GITHUB-PAGES.md](GITHUB-PAGES.md) for the included automatic deployment workflow or the simple static-files option. A GitHub repository has not been created or published by this session.
 
 ## Run locally
 
@@ -28,10 +32,12 @@ Open http://localhost:8080. Serve over HTTPS on a public host for clipboard acce
 After content edits:
 
     node scripts/build.mjs
+    python3 scripts/package-labs.py
     node --check dist/content.js
     node --check dist/app.js
+    node scripts/check.mjs
 
-Repackage `labs/` as `dist/labs.zip` after editing lab files. Never put credentials in source files.
+The packager regenerates `dist/labs.zip` from `labs/`. Set `SITE_URL` when building for a known public URL; otherwise canonical metadata remains relative for host portability. GitHub Actions sets it automatically. Never put credentials in source files.
 
 ## Accuracy and limits
 
@@ -42,3 +48,16 @@ Commands intentionally include templates, fragments and environment-dependent pr
 ## License
 
 Code: MIT. Original teaching content and exercises: CC BY 4.0. External videos, documentation and marks retain their owners' rights. See LICENSE and ATTRIBUTION.md.
+
+## Release packages
+
+    python3 scripts/package-release.py
+
+Creates `outputs/github-source.zip` (complete portable source including the hidden GitHub Actions workflow) and `outputs/github-pages-static.zip` (website files at archive root for simple branch publishing). The source ZIP omits Git history, local reports and Sites hosting identity.
+
+Optional online resource review (requires network access):
+
+    node scripts/collect-links.mjs
+    python3 scripts/check-links.py
+
+This checks HTTP responses and YouTube metadata, not actual player playback or documentation accuracy. See [REVIEW.md](REVIEW.md) for the final review evidence and remaining checks.

@@ -1,0 +1,12 @@
+import fs from 'node:fs';
+import vm from 'node:vm';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+process.chdir(path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'));
+const context=vm.createContext({});
+vm.runInContext(fs.readFileSync('dist/content.js','utf8'),context);
+const data=JSON.parse(vm.runInContext('JSON.stringify({lessons,sources,toolsList,videos})',context));
+const urls=[...new Set([...data.lessons.map(l=>l.doc),...data.sources.map(s=>s[2]),...data.toolsList.map(t=>t[2]),'https://ahsan2000.github.io/portfolio'])];
+fs.mkdirSync('outputs',{recursive:true});
+fs.writeFileSync('outputs/links.json',JSON.stringify({urls,videos:Object.values(data.videos).map(v=>v.id)},null,2));
+console.log(`Collected ${urls.length} public links into outputs/links.json`);
