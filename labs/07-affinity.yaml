@@ -1,0 +1,31 @@
+# First label a disposable worker: kubectl label node NODE_NAME disk=ssd
+# If it has dedicated=study:NoSchedule, this toleration permits that taint.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: placed
+  namespace: cka-lab
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: disk
+            operator: In
+            values: [ssd]
+  tolerations:
+  - key: dedicated
+    operator: Equal
+    value: study
+    effect: NoSchedule
+  containers:
+  - name: app
+    image: nginx:stable
+    resources:
+      requests:
+        cpu: 50m
+        memory: 32Mi
+      limits:
+        cpu: 200m
+        memory: 64Mi

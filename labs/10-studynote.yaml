@@ -1,0 +1,9 @@
+# Apply after CRD Established condition is True.
+apiVersion: training.example.com/v1
+kind: StudyNote
+metadata:
+  name: first-note
+  namespace: cka-lab
+spec:
+  topic: Custom resources
+  practiced: true

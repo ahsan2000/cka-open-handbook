@@ -1,0 +1,28 @@
+# This CRD adds an API type, but intentionally DOES NOT install an operator.
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: studynotes.training.example.com
+spec:
+  group: training.example.com
+  scope: Namespaced
+  names:
+    plural: studynotes
+    singular: studynote
+    kind: StudyNote
+  versions:
+  - name: v1
+    served: true
+    storage: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            required: [topic]
+            properties:
+              topic:
+                type: string
+              practiced:
+                type: boolean

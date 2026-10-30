@@ -1,0 +1,19 @@
+# Install a supported controller and replace the class name.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web
+  namespace: cka-lab
+spec:
+  ingressClassName: REPLACE_WITH_INSTALLED_CLASS
+  rules:
+  - host: web.example.test
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: web
+            port:
+              number: 8080

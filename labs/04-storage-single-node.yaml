@@ -1,0 +1,45 @@
+# Disposable SINGLE-NODE lab only. For multiple nodes use CSI/local PV node affinity.
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: cka-lab-static
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes: [ReadWriteOnce]
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: manual
+  hostPath:
+    path: /tmp/cka-lab-storage
+    type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data
+  namespace: cka-lab
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: manual
+  volumeName: cka-lab-static
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: writer
+  namespace: cka-lab
+spec:
+  containers:
+  - name: app
+    image: busybox:1.36
+    command: [sh, -c, "sleep 3600"]
+    volumeMounts:
+    - name: persistent
+      mountPath: /data
+  volumes:
+  - name: persistent
+    persistentVolumeClaim:
+      claimName: data
